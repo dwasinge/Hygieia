@@ -12,18 +12,19 @@ import java.util.List;
 @Component
 @ConfigurationProperties(prefix = "github")
 public class GitHubSettings {
-    private String cron;
-    private String host;
-    private String key;
+	private String cron;
+	private String host;
+	private String key;
 	@Value("${github.firstRunHistoryDays:14}")
-    private int firstRunHistoryDays;
-    private List<String> notBuiltCommits;
+	private int firstRunHistoryDays;
+	private List<String> notBuiltCommits;
 	@Value("${github.errorThreshold:2}")
-    private int errorThreshold;
+	private int errorThreshold;
 	@Value("${github.rateLimitThreshold:10}")
 	private int rateLimitThreshold;
 	private String personalAccessToken;
-
+	@Value("#{'${github.incident.labels}'.split(',')}")
+	private List<String> incidentLabels;
 
 	public String getHost() {
 		return host;
@@ -34,22 +35,22 @@ public class GitHubSettings {
 	}
 
 	public String getCron() {
-        return cron;
-    }
+		return cron;
+	}
 
-    public void setCron(String cron) {
-        this.cron = cron;
-    }
+	public void setCron(String cron) {
+		this.cron = cron;
+	}
 
 	public String getKey() {
 		return key;
 	}
-	
+
 	public void setKey(String key) {
 		this.key = key;
 	}
-	
-    public int getFirstRunHistoryDays() {
+
+	public int getFirstRunHistoryDays() {
 		return firstRunHistoryDays;
 	}
 
@@ -57,13 +58,13 @@ public class GitHubSettings {
 		this.firstRunHistoryDays = firstRunHistoryDays;
 	}
 
-    public List<String> getNotBuiltCommits() {
-        return notBuiltCommits;
-    }
+	public List<String> getNotBuiltCommits() {
+		return notBuiltCommits;
+	}
 
-    public void setNotBuiltCommits(List<String> notBuiltCommits) {
-        this.notBuiltCommits = notBuiltCommits;
-    }
+	public void setNotBuiltCommits(List<String> notBuiltCommits) {
+		this.notBuiltCommits = notBuiltCommits;
+	}
 
 	public int getErrorThreshold() {
 		return errorThreshold;
@@ -88,4 +89,13 @@ public class GitHubSettings {
 	public void setPersonalAccessToken(String personalAccessToken) {
 		this.personalAccessToken = personalAccessToken;
 	}
+
+	public List<String> getIncidentLabels() {
+		return incidentLabels;
+	}
+
+	public void setIncidentLabels(List<String> incidentLabels) {
+		this.incidentLabels = incidentLabels;
+	}
+
 }

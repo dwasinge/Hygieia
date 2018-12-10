@@ -6,21 +6,29 @@ import com.capitalone.dashboard.model.CollectionError;
 import com.capitalone.dashboard.model.Collector;
 import com.capitalone.dashboard.model.CollectorItem;
 import com.capitalone.dashboard.model.CollectorType;
+import com.capitalone.dashboard.model.Comment;
 import com.capitalone.dashboard.model.Commit;
+import com.capitalone.dashboard.model.CommitStatus;
 import com.capitalone.dashboard.model.CommitType;
 import com.capitalone.dashboard.model.GitHubRepo;
 import com.capitalone.dashboard.model.GitRequest;
+import com.capitalone.dashboard.model.Incident;
+import com.capitalone.dashboard.model.Review;
 import com.capitalone.dashboard.repository.BaseCollectorRepository;
 import com.capitalone.dashboard.repository.CommitRepository;
 import com.capitalone.dashboard.repository.ComponentRepository;
 import com.capitalone.dashboard.repository.GitHubRepoRepository;
 import com.capitalone.dashboard.repository.GitRequestRepository;
+import com.capitalone.dashboard.repository.IncidentRepository;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -49,6 +57,7 @@ public class GitHubCollectorTask extends CollectorTask<Collector> {
 
     private final BaseCollectorRepository<Collector> collectorRepository;
     private final GitHubRepoRepository gitHubRepoRepository;
+    private final IncidentRepository incidentRepository;
     private final CommitRepository commitRepository;
     private final GitRequestRepository gitRequestRepository;
     private final GitHubClient gitHubClient;
@@ -62,6 +71,7 @@ public class GitHubCollectorTask extends CollectorTask<Collector> {
     public GitHubCollectorTask(TaskScheduler taskScheduler,
                                BaseCollectorRepository<Collector> collectorRepository,
                                GitHubRepoRepository gitHubRepoRepository,
+                               IncidentRepository incidentRepository,
                                CommitRepository commitRepository,
                                GitRequestRepository gitRequestRepository,
                                GitHubClient gitHubClient,
@@ -70,6 +80,7 @@ public class GitHubCollectorTask extends CollectorTask<Collector> {
         super(taskScheduler, "GitHub");
         this.collectorRepository = collectorRepository;
         this.gitHubRepoRepository = gitHubRepoRepository;
+        this.incidentRepository = incidentRepository;
         this.commitRepository = commitRepository;
         this.gitHubClient = gitHubClient;
         this.gitHubSettings = gitHubSettings;
@@ -188,7 +199,9 @@ public class GitHubCollectorTask extends CollectorTask<Collector> {
                     LOG.info(repo.getOptions().toString() + "::" + repo.getBranch() + " get issues");
                     List<GitRequest> issues = gitHubClient.getIssues(repo, firstRun);
                     issueCount += processList(repo, issues, "issue");
+                    processIncidents(issues);
 
+      
                     //Step 2: Get all the Pull Requests
                     LOG.info(repo.getOptions().toString() + "::" + repo.getBranch() + "::get pulls");
                     List<GitRequest> allPRs = gitRequestRepository.findRequestNumberAndLastUpdated(repo.getId(), "pull");
@@ -276,6 +289,51 @@ public class GitHubCollectorTask extends CollectorTask<Collector> {
         return count;
     }
 
+    private void processIncidents(List<GitRequest> issues) {
+    	
+    	List<String> failureLabels = gitHubSettings.getIncidentLabels();
+
+    	for(GitRequest issue : issues) {
+
+    		for(String label : issue.getLabels()) {
+
+    			// if label is in failure labels, create incident and save
+    			if(failureLabels.contains(label)) {
+    				incidentRepository.save(createIncidentFromIssue(issue));
+    			}
+    		}
+
+    	}
+    	
+    }
+    
+    private Incident createIncidentFromIssue(GitRequest issue) {
+
+    	Incident incident = new Incident();
+   
+    	incident.setOpenedBy(issue.getScmAuthor());
+    	incident.setOpenTime(issue.getCreatedAt());
+    	incident.setClosedTime(issue.getClosedAt());
+    	incident.setClosedBy(issue.getMergeAuthor());
+    	incident.setUpdatedTime(issue.getUpdatedAt());
+    	incident.setIncidentDescription(issue.getScmCommitLog());
+    	incident.setStatus(issue.getState());
+    	incident.setCollectorItemId(issue.getCollectorItemId());
+
+    	// TODO:  Not sure about what values to set for these items on the incident
+//      private Long timestamp;
+//      private String incidentItem;
+//      private String incidentID;
+//      private String category;
+//      private String severity;
+//      private String primaryAssignmentGroup;
+//      private String closureCode;
+//      private String affectedItem;
+    	
+    	return incident;
+
+    }
+   
     private boolean isRateLimitError(HttpStatusCodeException hc) {
         String response = hc.getResponseBodyAsString();
         return StringUtils.isEmpty(response) ? false : response.contains(API_RATE_LIMIT_MESSAGE);

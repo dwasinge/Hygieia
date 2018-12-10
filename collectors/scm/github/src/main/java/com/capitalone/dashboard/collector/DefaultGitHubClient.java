@@ -41,6 +41,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -331,6 +332,15 @@ public class DefaultGitHubClient implements GitHubClient {
                 String created = str(jsonObject, "created_at");
                 String closed = str(jsonObject, "closed_at");
                 long createdTimestamp = new DateTime(created).getMillis();
+
+                List<String> labels = new ArrayList<>();
+                JSONArray labelArray = (JSONArray) jsonObject.get("labels");
+                Iterator<JSONObject> iterator = labelArray.iterator();
+                while (iterator.hasNext()) {
+                	JSONObject label = iterator.next();
+                    labels.add((String)label.get("name"));
+                }
+                
                 GitRequest issue = new GitRequest();
                 if (closed != null && closed.length() >= 10) {
                     long mergedTimestamp = new DateTime(closed).getMillis();
@@ -351,6 +361,7 @@ public class DefaultGitHubClient implements GitHubClient {
                 } else {
                     issue.setState("open");
                 }
+                issue.setLabels(labels);
                 issue.setOrgName(gitHubParsed.getOrgName());
                 issue.setRepoName(gitHubParsed.getRepoName());
                 issues.add(issue);
@@ -614,6 +625,7 @@ public class DefaultGitHubClient implements GitHubClient {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", authHeader);
+        headers.set("User-Agent", "hygieia-metrics-app");
         return headers;
     }
 
