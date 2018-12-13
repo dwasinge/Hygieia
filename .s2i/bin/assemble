@@ -7,4 +7,6 @@ echo "Files in directory m2"
 ls -la /tmp/artifacts/m2
 
 
+cat /usr/local/s2i/assemble
+
 /usr/local/s2i/assemble
