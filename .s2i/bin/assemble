@@ -3,9 +3,15 @@
 echo "Printing PWD"
 pwd
 
-echo "Files in directory m2"
-ls -la /tmp/artifacts/m2
+echo --------------
 
+echo "S2I Directory"
+echo ${S2I_ARTIFACTS_DIR}
+
+echo --------------
+
+echo "directory listing of s2i directory"
+ls -la ${S2I_ARTIFACTS_DIR}
 
 cat /usr/local/s2i/assemble
 
