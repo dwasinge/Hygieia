@@ -3,8 +3,8 @@
 echo "Printing PWD"
 pwd
 
-echo "Files in directory"
-ls -la
+echo "Files in directory m2"
+ls -la /tmp/artifacts/m2
 
 
 /usr/local/s2i/assemble
