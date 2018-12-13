@@ -7,4 +7,9 @@ echo "current directory contents"
 pwd
 ls -la
 
+echo "deployments directory contents"
+ls -la /deployments
+
+
+
 #/usr/local/s2i/assemble
