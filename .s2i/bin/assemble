@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Script directory contents"
+ls -la /usr/local/s2i
+
+echo "current directory contents"
+pwd
+ls -la
+
+#/usr/local/s2i/assemble
