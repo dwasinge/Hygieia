@@ -6,14 +6,11 @@ import com.capitalone.dashboard.model.CollectionError;
 import com.capitalone.dashboard.model.Collector;
 import com.capitalone.dashboard.model.CollectorItem;
 import com.capitalone.dashboard.model.CollectorType;
-import com.capitalone.dashboard.model.Comment;
 import com.capitalone.dashboard.model.Commit;
-import com.capitalone.dashboard.model.CommitStatus;
 import com.capitalone.dashboard.model.CommitType;
 import com.capitalone.dashboard.model.GitHubRepo;
 import com.capitalone.dashboard.model.GitRequest;
 import com.capitalone.dashboard.model.Incident;
-import com.capitalone.dashboard.model.Review;
 import com.capitalone.dashboard.repository.BaseCollectorRepository;
 import com.capitalone.dashboard.repository.CommitRepository;
 import com.capitalone.dashboard.repository.ComponentRepository;
@@ -27,8 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -295,12 +290,16 @@ public class GitHubCollectorTask extends CollectorTask<Collector> {
 
     	for(GitRequest issue : issues) {
 
-    		for(String label : issue.getLabels()) {
-
-    			// if label is in failure labels, create incident and save
-    			if(failureLabels.contains(label)) {
-    				incidentRepository.save(createIncidentFromIssue(issue));
-    			}
+    		if(null != issue.getLabels()) {
+    		
+	    		for(String label : issue.getLabels()) {
+	
+	    			// if label is in failure labels, create incident and save
+	    			if(failureLabels.contains(label)) {
+	    				incidentRepository.save(createIncidentFromIssue(issue));
+	    			}
+	    		}
+    		
     		}
 
     	}
