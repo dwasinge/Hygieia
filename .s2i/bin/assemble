@@ -16,10 +16,10 @@ ls -la /tmp
 echo "tmp/src directory contents"
 ls -la /tmp/src
 
-echo "printing s2i-setup"
-cat /usr/local/s2i/s2i-setup
+mkdir -p /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW
+cp /tmp/src/core-3.1.0-DW.jar /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW/core-3.1.0-DW.jar
 
-echo "printing common.sh"
-cat /usr/local/s2i/common.sh
+echo "repo directory contents"
+ls -la /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW/core-3.1.0-DW.jar
 
 #/usr/local/s2i/assemble
