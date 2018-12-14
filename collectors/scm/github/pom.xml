@@ -97,10 +97,30 @@
       <artifactId>core</artifactId>
       <version>3.1.0-DW</version>
     </dependency>
+
+	<!-- adding these that should be pulled from core -->
 	<dependency>
 	  <groupId>commons-collections</groupId>
   	  <artifactId>commons-collections</artifactId>
 	</dependency>
+    <dependency>
+      <groupId>com.mysema.querydsl</groupId>
+      <artifactId>querydsl-jpa</artifactId>
+      <version>3.6.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mysema.querydsl</groupId>
+      <artifactId>querydsl-apt</artifactId>
+      <version>3.6.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.mysema.querydsl</groupId>
+      <artifactId>querydsl-mongodb</artifactId>
+      <version>3.6.0</version>
+    </dependency>
+
+	<!-- end core deps -->
+
     <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
