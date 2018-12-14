@@ -10,6 +10,13 @@ ls -la
 echo "deployments directory contents"
 ls -la /deployments
 
+echo "tmp directory contents"
+ls -la /tmp
 
+echo "printing s2i-setup"
+cat /usr/local/s2i/s2i-setup
+
+echo "printing common.sh"
+cat /usr/local/s2i/common.sh
 
 #/usr/local/s2i/assemble
