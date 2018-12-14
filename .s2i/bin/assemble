@@ -16,7 +16,11 @@ ls -la /tmp
 echo "tmp/src directory contents"
 ls -la /tmp/src
 
+echo "printing scl-enable-maven"
 cat /usr/local/s2i/scl-enable-maven
+
+echo "print enable"
+cat /opt/rh/rh-maven35/enable
 
 #mkdir -p /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW
 #cp /tmp/src/core-3.1.0-DW.jar /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW/core-3.1.0-DW.jar
