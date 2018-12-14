@@ -20,6 +20,6 @@ mkdir -p /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW
 cp /tmp/src/core-3.1.0-DW.jar /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW/core-3.1.0-DW.jar
 
 echo "repo directory contents"
-ls -la /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW/core-3.1.0-DW.jar
+ls -la /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW
 
 /usr/local/s2i/assemble
