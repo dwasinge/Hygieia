@@ -22,6 +22,10 @@ cat /usr/local/s2i/scl-enable-maven
 echo "print enable"
 cat /opt/rh/rh-maven35/enable
 
+source /opt/rh/rh-maven35/enable
+
+mvn --version
+
 #mkdir -p /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW
 #cp /tmp/src/core-3.1.0-DW.jar /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW/core-3.1.0-DW.jar
 
