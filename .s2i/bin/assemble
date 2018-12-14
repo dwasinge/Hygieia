@@ -1,41 +1,10 @@
 #!/bin/sh
 
-echo "Script directory contents"
-ls -la /usr/local/s2i
-
-echo "current directory contents"
-pwd
-ls -la
-
-echo "deployments directory contents"
-ls -la /deployments
-
-echo "tmp directory contents"
-ls -la /tmp
-
-echo "tmp/src directory contents"
-ls -la /tmp/src
-
-#echo "printing scl-enable-maven"
-#cat /usr/local/s2i/scl-enable-maven
-
-#echo "print enable"
-#cat /opt/rh/rh-maven35/enable
-
+# enable maven so we can install the core JAR
 source /opt/rh/rh-maven35/enable
 
+# install core jar into local maven repo
 mvn install:install-file -Dfile=/tmp/src/core-3.1.0-DW.jar -DgroupId=com.capitalone.dashboard -DartifactId=core -Dversion=3.1.0-DW -Dpackaging=jar -DlocalRepositoryPath=/tmp/artifacts/m2
 
-#mkdir -p /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW
-#cp /tmp/src/core-3.1.0-DW.jar /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW/core-3.1.0-DW.jar
-
-echo "repo directory contents"
-ls -la /tmp/src/m2/repository/com/capitalone/dashboard/core/3.1.0-DW
-
-#echo "s2i-setup"
-#cat /usr/local/s2i/s2i-setup
-
-#echo "common.sh"
-#cat /usr/local/s2i/common.sh
-
+# run default assemble to perform maven build
 /usr/local/s2i/assemble
